@@ -155,8 +155,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BespokePetaPocoRepository.cs" />
     <Compile Include="DocumentTypes\DocumentTypeAttribute.cs" />
     <Compile Include="DocumentTypes\DocumentTypeBase.cs" />
+    <Compile Include="DocumentTypes\TabGroupAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartupHandler.cs" />
     <Compile Include="Strategies\DefaultStrategy.cs" />
