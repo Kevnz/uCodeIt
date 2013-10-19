@@ -96,7 +96,29 @@ namespace uCodeIt.Importer
             }
 
             ContentTypeService.Save(contentTypes);
+
+            SetupAllowedChildren(contentTypes.Join(types, x => x.Alias, x => x.Alias, (ct, m) => new { ct, m }).ToDictionary(x => x.ct, x => x.m));
         }
 
+        private void SetupAllowedChildren(IEnumerable<KeyValuePair<IContentType, DocumentTypeMetadata>> contentTypes)
+        {
+            var allKnownContentTypes = ContentTypeService.GetAllContentTypes().ToArray();
+
+            foreach (var item in contentTypes)
+            {
+                var ct = item.Key;
+                var metadata = item.Value;
+
+                ct.AllowedContentTypes = allKnownContentTypes
+                    .Where(c => metadata.AllowedChildren.Any(x => x.Alias == c.Alias))
+                    .Select((c, i) => new ContentTypeSort
+                {
+                    Id = new System.Lazy<int>(() => c.Id),
+                    SortOrder = i
+                });
+            }
+
+            ContentTypeService.Save(contentTypes.Select(x => x.Key));
+        }
     }
 }

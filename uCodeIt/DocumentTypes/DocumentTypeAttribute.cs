@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace uCodeIt.DocumentTypes
 {
@@ -12,6 +13,11 @@ namespace uCodeIt.DocumentTypes
             DefaultIcon = "doc.gif";
         }
 
+        public DocumentTypeAttribute()
+        {
+            AllowedChildren = new Type[0];
+        }
+
         public string Alias { get; set; }
         public string Name { get; set; }
         public IEnumerable<string> Templates { get; set; }
@@ -20,7 +26,7 @@ namespace uCodeIt.DocumentTypes
         public string Thumbnail { get; set; }
         public bool AllowAsRoot { get; set; }
 
-        public IEnumerable<Type> AllowedChildren { get; set; }
+        public Type[] AllowedChildren { get; set; }
 
         public static string DefaultThumbnail { get; set; }
         public static string DefaultIcon { get; set; }
