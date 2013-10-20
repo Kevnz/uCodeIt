@@ -156,13 +156,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BespokePetaPocoRepository.cs" />
-    <Compile Include="DocumentTypes\DocumentTypeAttribute.cs" />
-    <Compile Include="DocumentTypes\DocumentTypeBase.cs" />
-    <Compile Include="DocumentTypes\TabGroupAttribute.cs" />
     <Compile Include="CacheValidator.cs" />
     <Compile Include="DocumentTypes\DataType.cs" />
     <Compile Include="DocumentTypes\DocumentTypeAttribute.cs" />
     <Compile Include="DocumentTypes\DocumentTypeBase.cs" />
+    <Compile Include="DocumentTypes\TabGroupAttribute.cs" />
     <Compile Include="DocumentTypes\PropertyAttribute.cs" />
     <Compile Include="Importer\DefaultImporter.cs" />
     <Compile Include="Importer\IImporter.cs" />
