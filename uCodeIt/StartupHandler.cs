@@ -50,7 +50,8 @@ namespace uCodeIt
                                         }),
                                         Type = type,
                                         Attribute = attr,
-                                        Templates = attr.Templates
+                                        Templates = attr.Templates,
+                                        DefaultTemplate = attr.DefaultTemplate
                                     }).ToArray();
 
                 foreach (var documentType in documentTypes)

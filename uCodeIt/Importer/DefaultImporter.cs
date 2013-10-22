@@ -159,6 +159,9 @@ namespace uCodeIt.Importer
                     ;
 
                 ct.AllowedTemplates = templates;
+
+                if (!string.IsNullOrEmpty(meta.DefaultTemplate))
+                    ct.SetDefaultTemplate(templates.First(t => t.Name == meta.DefaultTemplate || t.Alias == meta.DefaultTemplate.ToSafeAlias()));
             }
         }
     }
