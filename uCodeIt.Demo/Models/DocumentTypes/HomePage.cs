@@ -1,8 +1,9 @@
-﻿using uCodeIt.DocumentTypes;
+﻿using System;
+using uCodeIt.DocumentTypes;
 
 namespace uCodeIt.Demo.Models.DocumentTypes
 {
-    [DocumentType(Alias = "Home")]
+    [DocumentType(Alias = "Home", AllowedChildren = new[] { typeof(HomePage) }, Templates = new[] { "Home Page", "Alt Home Page" })]
     public class HomePage : DocumentTypeBase
     {
         [Property(DataType = DataType.TextString, Tab = Tab.Tab2, Name = "Second Title")]

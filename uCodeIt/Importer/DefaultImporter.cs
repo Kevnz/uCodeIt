@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using uCodeIt.Metadata;
+using umbraco.BusinessLogic;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -11,16 +12,22 @@ namespace uCodeIt.Importer
     {
         public IContentTypeService ContentTypeService { get; private set; }
         public IDataTypeService DataTypeService { get; private set; }
+        public IFileService FileService { get; private set; }
 
         protected internal DefaultImporter()
-            : this(ApplicationContext.Current.Services.ContentTypeService, ApplicationContext.Current.Services.DataTypeService)
+            : this(
+            ApplicationContext.Current.Services.ContentTypeService,
+            ApplicationContext.Current.Services.DataTypeService,
+            ApplicationContext.Current.Services.FileService
+            )
         {
         }
 
-        protected DefaultImporter(IContentTypeService contentTypeService, IDataTypeService dataTypeService)
+        protected DefaultImporter(IContentTypeService contentTypeService, IDataTypeService dataTypeService, IFileService fileService)
         {
             ContentTypeService = contentTypeService;
             DataTypeService = dataTypeService;
+            FileService = fileService;
         }
 
         public void Process(IEnumerable<DocumentTypeMetadata> types)
@@ -96,7 +103,66 @@ namespace uCodeIt.Importer
             }
 
             ContentTypeService.Save(contentTypes);
+
+            var preprocessedData = contentTypes
+                .Join(types, x => x.Alias, x => x.Alias, (ct, m) => new { ct, m })
+                .ToDictionary(x => x.ct, x => x.m);
+
+            SetupAllowedChildren(preprocessedData);
+            SetupTemplates(preprocessedData);
+
+            ContentTypeService.Save(contentTypes);
         }
 
+        private void SetupAllowedChildren(IEnumerable<KeyValuePair<IContentType, DocumentTypeMetadata>> contentTypes)
+        {
+            var allKnownContentTypes = ContentTypeService.GetAllContentTypes().ToArray();
+
+            foreach (var item in contentTypes)
+            {
+                var ct = item.Key;
+                var metadata = item.Value;
+
+                ct.AllowedContentTypes = allKnownContentTypes
+                    .Where(c => metadata.AllowedChildren.Any(x => x.Alias == c.Alias))
+                    .Select((c, i) => new ContentTypeSort
+                {
+                    Id = new System.Lazy<int>(() => c.Id),
+                    SortOrder = i
+                });
+            }
+        }
+
+        private void SetupTemplates(IEnumerable<KeyValuePair<IContentType, DocumentTypeMetadata>> contentTypes)
+        {
+            var knownTemplates = FileService.GetTemplates();
+            var uniqueTemplates = contentTypes.SelectMany(x => x.Value.Templates).Distinct();
+
+            var newTemplates = uniqueTemplates
+                .Where(name =>
+                    !knownTemplates.Any(k => k.Name == name) ||
+                    !knownTemplates.Any(k => k.Alias == name.ToSafeAlias())
+                )
+                .Select(name => new Template(name.ToSafeAlias() + ".cshtml", name, name.ToSafeAlias()));
+
+            FileService.SaveTemplate(newTemplates);
+
+            knownTemplates = knownTemplates.Concat(newTemplates);
+
+            foreach (var item in contentTypes)
+            {
+                var ct = item.Key;
+                var meta = item.Value;
+
+                var templates = knownTemplates
+                    .Where(t => meta.Templates.Any(x => x == t.Name || x.ToSafeAlias() == t.Alias))
+                    ;
+
+                ct.AllowedTemplates = templates;
+
+                if (!string.IsNullOrEmpty(meta.DefaultTemplate))
+                    ct.SetDefaultTemplate(templates.First(t => t.Name == meta.DefaultTemplate || t.Alias == meta.DefaultTemplate.ToSafeAlias()));
+            }
+        }
     }
 }

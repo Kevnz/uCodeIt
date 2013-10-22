@@ -28,7 +28,7 @@ namespace uCodeIt
                 var documentTypes = (from type in types
                                     let attr = type.GetCustomAttribute<DocumentTypeAttribute>(true)
                                     let name = string.IsNullOrEmpty(attr.Name) ? type.Name : attr.Name
-                                    let alias = string.IsNullOrEmpty(attr.Alias) ? type.Name : attr.Alias
+                                    let alias = string.IsNullOrEmpty(attr.Alias) ? type.Name.ToSafeAlias() : attr.Alias
                                     let properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(property => new {
                                         Attribute = property.GetCustomAttribute<PropertyAttribute>(),
                                         Property = property
@@ -49,7 +49,9 @@ namespace uCodeIt
                                             Tab = p.Attribute.Tab
                                         }),
                                         Type = type,
-                                        Attribute = attr
+                                        Attribute = attr,
+                                        Templates = attr.Templates,
+                                        DefaultTemplate = attr.DefaultTemplate
                                     }).ToArray();
 
                 foreach (var documentType in documentTypes)
