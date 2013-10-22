@@ -16,11 +16,13 @@ namespace uCodeIt.DocumentTypes
         public DocumentTypeAttribute()
         {
             AllowedChildren = new Type[0];
+            Templates = new string[0];
         }
 
         public string Alias { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> Templates { get; set; }
+        public string[] Templates { get; set; }
+        public string DefaultTemplate { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
         public string Thumbnail { get; set; }
