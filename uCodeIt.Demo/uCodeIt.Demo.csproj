@@ -273,6 +273,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\uCodeIt.Fody\uCodeIt.Fody.csproj">
+      <Project>{4d58b762-b3b0-427a-95d8-e4c462941267}</Project>
+      <Name>uCodeIt.Fody</Name>
+    </ProjectReference>
     <ProjectReference Include="..\uCodeIt\uCodeIt.csproj">
       <Project>{b8ba2d50-67f6-475f-bfeb-694bdf2be5a3}</Project>
       <Name>uCodeIt</Name>
@@ -314,7 +318,6 @@
     </ItemGroup>
     <Copy SourceFiles="@(UmbracoFilesToCopy)" DestinationFiles="@(UmbracoFilesToCopy->'umbraco\%(RecursiveDir)%(Filename)%(Extension)')" Condition="!Exists('umbraco')" />
     <Copy SourceFiles="@(UmbracoClientFilesToCopy)" DestinationFiles="@(UmbracoClientFilesToCopy->'umbraco_client\%(RecursiveDir)%(Filename)%(Extension)')" Condition="!Exists('umbraco_client')" />
-
   </Target>
   <Target Name="AfterBuild">
   </Target>
