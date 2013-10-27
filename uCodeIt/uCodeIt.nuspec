@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>uCodeIt</id>
+    <version>0.1.0</version>
+    <title>uCodeIt</title>
+    <authors>Aaron Powell, Benjamin Howarth</authors>
+    <owners>Aaron Powell</owners>
+    <licenseUrl>https://github.com/codegecko/uCodeIt/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/codegecko/uCodeIt/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>uCodeIt is a new approach to code-first Umbraco.</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>umbraco code-first</tags>
+  </metadata>
+</package>
